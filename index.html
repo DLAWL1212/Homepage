@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>임지혁 | CAD Portfolio</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,"Noto Sans KR",sans-serif;
+    color:white;
+    background:
+        radial-gradient(circle at 10% 10%,#4c1d95 0,transparent 30%),
+        radial-gradient(circle at 90% 20%,#1d4ed8 0,transparent 30%),
+        #080b18;
+    min-height:100vh;
+}
+
+button,
+input,
+textarea{
+    font-family:inherit;
+}
+
+.container{
+    width:min(1100px,92%);
+    margin:auto;
+}
+
+/* NAV */
+
+nav{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(8,11,24,.75);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.nav{
+    height:70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:800;
+    background:linear-gradient(90deg,#c084fc,#60a5fa);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.nav a{
+    color:#b8bfd1;
+    text-decoration:none;
+    margin-left:25px;
+    font-size:14px;
+}
+
+.nav a:hover{
+    color:white;
+}
+
+/* HERO */
+
+.hero{
+    padding:120px 0 90px;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:50px;
+    background:rgba(139,92,246,.15);
+    border:1px solid rgba(167,139,250,.3);
+    color:#c4b5fd;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:25px;
+}
+
+.hero h1{
+    font-size:clamp(45px,8vw,80px);
+    line-height:1.05;
+    letter-spacing:-4px;
+}
+
+.gradient{
+    background:linear-gradient(90deg,#c084fc,#60a5fa,#818cf8);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+    color:#a8afc1;
+    margin-top:25px;
+    font-size:18px;
+    line-height:1.8;
+}
+
+/* SECTION */
+
+section{
+    padding:80px 0;
+}
+
+.small-title{
+    color:#a78bfa;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:2px;
+    margin-bottom:8px;
+}
+
+.section-title{
+    font-size:36px;
+    margin-bottom:35px;
+}
+
+/* PROFILE */
+
+.profile{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.profile-card{
+    padding:25px;
+    border-radius:20px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+    transition:.25s;
+}
+
+.profile-card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(139,92,246,.5);
+}
+
+.profile-label{
+    color:#81899e;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.profile-value{
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* CAD */
+
+.cad-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    margin-bottom:35px;
+}
+
+.add-button{
+    border:0;
+    border-radius:14px;
+    padding:14px 20px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    background:linear-gradient(135deg,#7c3aed,#2563eb);
+    box-shadow:0 10px 30px rgba(99,102,241,.25);
+    transition:.2s;
+}
+
+.add-button:hover{
+    transform:translateY(-3px);
+}
+
+.cad-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.card{
+    overflow:hidden;
+    border-radius:22px;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.1);
+    transition:.25s;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(139,92,246,.5);
+}
+
+.card-image{
+    width:100%;
+    height:230px;
+    background:linear-gradient(135deg,#171b30,#0d1020);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.card-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.card:hover .card-image img{
+    transform:scale(1.04);
+}
+
+.card-info{
+    padding:22px;
+}
+
+.card-info h3{
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+.card-info p{
+    color:#9299ac;
+    line-height:1.6;
+    font-size:14px;
+    min-height:45px;
+    white-space:pre-wrap;
+}
+
+.date{
+    color:#62697d;
+    font-size:12px;
+    margin-top:15px;
+}
+
+.delete{
+    width:100%;
+    margin-top:18px;
+    padding:11px;
+    border-radius:11px;
+    border:1px solid rgba(248,113,113,.2);
+    background:rgba(239,68,68,.08);
+    color:#fca5a5;
+    cursor:pointer;
+}
+
+.delete:hover{
+    background:rgba(239,68,68,.2);
+}
+
+.empty{
+    grid-column:1/-1;
+    padding:80px 20px;
+    text-align:center;
+    border:1px dashed rgba(255,255,255,.15);
+    border-radius:22px;
+    color:#737b91;
+}
+
+.empty-icon{
+    font-size:45px;
+    margin-bottom:15px;
+}
+
+/* MODAL */
+
+.modal-bg{
+    position:fixed;
+    inset:0;
+    z-index:500;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+}
+
+.modal-bg.show{
+    display:flex;
+}
+
+.modal{
+    width:min(600px,100%);
+    max-height:90vh;
+    overflow:auto;
+    padding:30px;
+    border-radius:24px;
+    background:linear-gradient(145deg,#171b30,#0d1020);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 30px 80px rgba(0,0,0,.5);
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.modal-header h2{
+    font-size:24px;
+}
+
+.close{
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:10px;
+    background:rgba(255,255,255,.07);
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    color:#a0a7b8;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.form-group input,
+.form-group textarea{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.05);
+    color:white;
+    outline:none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+    border-color:#8b5cf6;
+}
+
+.form-group textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.file-box{
+    padding:25px;
+    border:1px dashed rgba(139,92,246,.5);
+    border-radius:15px;
+    background:rgba(124,58,237,.06);
+}
+
+.preview{
+    display:none;
+    width:100%;
+    max-height:250px;
+    object-fit:contain;
+    margin-top:15px;
+    border-radius:12px;
+}
+
+.save{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:13px;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    background:linear-gradient(135deg,#7c3aed,#2563eb);
+}
+
+footer{
+    padding:50px 0;
+    border-top:1px solid rgba(255,255,255,.08);
+    text-align:center;
+    color:#62697d;
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+    .profile{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .cad-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+
+    .nav a{
+        display:none;
+    }
+
+    .hero{
+        padding:80px 0 60px;
+    }
+
+    .hero h1{
+        font-size:48px;
+        letter-spacing:-2px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+
+    .profile{
+        grid-template-columns:1fr;
+    }
+
+    .cad-grid{
+        grid-template-columns:1fr;
+    }
+
+    .cad-top{
+        display:block;
+    }
+
+    .add-button{
+        width:100%;
+        margin-top:20px;
+    }
+
+    .section-title{
+        font-size:30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="container nav">
+        <div class="logo">
+            JIHYUK PORTFOLIO
+        </div>
+
+        <div>
+            <a href="#profile">프로필</a>
+            <a href="#works">CAD 완성작</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+
+<div class="hero">
+    <div class="container">
+
+        <div class="badge">
+            HIGH SCHOOL CAD PORTFOLIO
+        </div>
+
+        <h1>
+            나의 작업을<br>
+            <span class="gradient">
+                작품으로 기록하다.
+            </span>
+        </h1>
+
+        <p>
+            삼일공업고등학교에서 배우고 만든
+            CAD 완성작을 기록하는 개인 포트폴리오입니다.
+        </p>
+
+    </div>
+</div>
+
+
+<!-- PROFILE -->
+
+<section id="profile">
+
+    <div class="container">
+
+        <div class="small-title">
+            PROFILE
+        </div>
+
+        <h2 class="section-title">
+            나의 정보
+        </h2>
+
+        <div class="profile">
+
+            <div class="profile-card">
+                <div class="profile-label">이름</div>
+                <div class="profile-value">임지혁</div>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-label">학번</div>
+                <div class="profile-value">1118</div>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-label">학교</div>
+                <div class="profile-value">삼일공업고등학교</div>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-label">나이</div>
+                <div class="profile-value">17세</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CAD -->
+
+<section id="works">
+
+    <div class="container">
+
+        <div class="cad-top">
+
+            <div>
+                <div class="small-title">
+                    CAD WORKS
+                </div>
+
+                <h2 class="section-title" style="margin-bottom:0;">
+                    CAD 완성작
+                </h2>
+            </div>
+
+            <button
+                class="add-button"
+                onclick="openModal()"
+            >
+                ＋ 완성작 추가
+            </button>
+
+        </div>
+
+
+        <div
+            class="cad-grid"
+            id="cadGrid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<footer>
+    임지혁 · CAD Portfolio
+</footer>
+
+
+<!-- MODAL -->
+
+<div
+    class="modal-bg"
+    id="modalBg"
+    onclick="backgroundClose(event)"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2>
+                CAD 완성작 추가
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="form">
+
+            <div class="form-group">
+
+                <label>
+                    작품명
+                </label>
+
+                <input
+                    id="title"
+                    type="text"
+                    placeholder="예: 볼펜형 컴퍼스"
+                    maxlength="80"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    작품 설명
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="이 CAD 완성작에 대한 설명을 적어주세요."
+                    maxlength="500"
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    완성된 CAD 이미지
+                </label>
+
+                <div class="file-box">
+
+                    <input
+                        id="image"
+                        type="file"
+                        accept="image/*"
+                        required
+                    >
+
+                    <img
+                        id="preview"
+                        class="preview"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="save"
+                type="submit"
+            >
+                작품 등록하기
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/*
+    ==========================================
+    CAD 작품 저장 기능
+    ==========================================
+
+    작품을 인터넷이 아니라
+    이 브라우저의 저장공간에 보관합니다.
+
+    따라서 새로고침해도 작품이 남습니다.
+*/
+
+
+let projects = [];
+
+
+/* 저장된 작품 불러오기 */
+
+function loadData(){
+
+    const saved =
+        localStorage.getItem("jihyuk_cad_projects");
+
+    if(saved){
+
+        try{
+            projects = JSON.parse(saved);
+        }
+        catch{
+            projects = [];
+        }
+
+    }
+
+    render();
+}
+
+
+/* 작품 저장 */
+
+function saveData(){
+
+    localStorage.setItem(
+        "jihyuk_cad_projects",
+        JSON.stringify(projects)
+    );
+
+}
+
+
+/* 작품 화면에 표시 */
+
+function render(){
+
+    const grid =
+        document.getElementById("cadGrid");
+
+
+    if(projects.length === 0){
+
+        grid.innerHTML = `
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🛠️
+                </div>
+
+                <div>
+                    아직 등록된 CAD 완성작이 없습니다.
+                </div>
+
+                <br>
+
+                <div>
+                    위의 「＋ 완성작 추가」 버튼을 눌러
+                    첫 작품을 등록해보세요.
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    grid.innerHTML = projects.map(
+        (project,index) => {
+
+            const safeTitle =
+                escapeHTML(project.title);
+
+            const safeDescription =
+                escapeHTML(project.description);
+
+
+            return `
+
+                <div class="card">
+
+                    <div class="card-image">
+
+                        <img
+                            src="${project.image}"
+                            alt="${safeTitle}"
+                            onclick="showImage(${index})"
+                        >
+
+                    </div>
+
+
+                    <div class="card-info">
+
+                        <h3>
+                            ${safeTitle}
+                        </h3>
+
+                        <p>
+                            ${
+                                safeDescription ||
+                                "작품 설명이 없습니다."
+                            }
+                        </p>
+
+                        <div class="date">
+                            등록일 · ${project.date}
+                        </div>
+
+
+                        <button
+                            class="delete"
+                            onclick="deleteProject(${index})"
+                        >
+                            작품 삭제
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    ).join("");
+
+}
+
+
+/* 모달 열기 */
+
+function openModal(){
+
+    document
+        .getElementById("modalBg")
+        .classList.add("show");
+
+}
+
+
+/* 모달 닫기 */
+
+function closeModal(){
+
+    document
+        .getElementById("modalBg")
+        .classList.remove("show");
+
+    document
+        .getElementById("form")
+        .reset();
+
+    document
+        .getElementById("preview")
+        .style.display = "none";
+
+}
+
+
+/* 배경 클릭으로 닫기 */
+
+function backgroundClose(event){
+
+    if(event.target.id === "modalBg"){
+
+        closeModal();
+
+    }
+
+}
+
+
+/* 이미지 미리보기 */
+
+document
+    .getElementById("image")
+    .addEventListener(
+        "change",
+        function(){
+
+            const file =
+                this.files[0];
+
+            if(!file){
+
+                return;
+
+            }
+
+
+            if(!file.type.startsWith("image/")){
+
+                alert(
+                    "이미지 파일을 선택해주세요."
+                );
+
+                this.value = "";
+
+                return;
+
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function(event){
+
+                    const preview =
+                        document.getElementById(
+                            "preview"
+                        );
+
+                    preview.src =
+                        event.target.result;
+
+                    preview.style.display =
+                        "block";
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+
+/* 작품 추가 */
+
+document
+    .getElementById("form")
+    .addEventListener(
+        "submit",
+        function(event){
+
+            event.preventDefault();
+
+
+            const title =
+                document
+                    .getElementById("title")
+                    .value
+                    .trim();
+
+
+            const description =
+                document
+                    .getElementById("description")
+                    .value
+                    .trim();
+
+
+            const file =
+                document
+                    .getElementById("image")
+                    .files[0];
+
+
+            if(!file){
+
+                alert(
+                    "완성된 CAD 이미지를 선택해주세요."
+                );
+
+                return;
+
+            }
+
+
+            /* 이미지 크기 제한 */
+
+            if(file.size > 5 * 1024 * 1024){
+
+                alert(
+                    "이미지는 5MB 이하로 선택해주세요."
+                );
+
+                return;
+
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function(event){
+
+                    const newProject = {
+
+                        title:title,
+
+                        description:description,
+
+                        image:event.target.result,
+
+                        date:new Date()
+                            .toLocaleDateString(
+                                "ko-KR"
+                            )
+
+                    };
+
+
+                    projects.unshift(
+                        newProject
+                    );
+
+
+                    try{
+
+                        saveData();
+
+                        render();
+
+                        closeModal();
+
+                        alert(
+                            "CAD 완성작이 등록되었습니다!"
+                        );
+
+                    }
+                    catch{
+
+                        alert(
+                            "저장 공간이 부족합니다. " +
+                            "이미지 크기를 줄여서 다시 시도해주세요."
+                        );
+
+                    }
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+
+/* 작품 삭제 */
+
+function deleteProject(index){
+
+    const answer =
+        confirm(
+            "이 CAD 완성작을 삭제할까요?"
+        );
+
+
+    if(!answer){
+
+        return;
+
+    }
+
+
+    projects.splice(
+        index,
+        1
+    );
+
+
+    saveData();
+
+    render();
+
+}
+
+
+/* 이미지 크게 보기 */
+
+function showImage(index){
+
+    const project =
+        projects[index];
+
+
+    const newWindow =
+        window.open("");
+
+    if(newWindow){
+
+        newWindow.document.write(`
+            <html>
+            <head>
+                <title>${escapeHTML(project.title)}</title>
+
+                <style>
+                    body{
+                        margin:0;
+                        background:#080b18;
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        min-height:100vh;
+                    }
+
+                    img{
+                        max-width:95%;
+                        max-height:95vh;
+                        object-fit:contain;
+                    }
+                </style>
+
+            </head>
+
+            <body>
+
+                <img src="${project.image}">
+
+            </body>
+
+            </html>
+        `);
+
+    }
+
+}
+
+
+/* 글자 안전하게 표시 */
+
+function escapeHTML(text){
+
+    return String(text)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* 페이지 시작 */
+
+loadData();
+
+</script>
+
+</body>
+</html>
