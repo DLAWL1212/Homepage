@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>냥코 상점</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#0c1638;
+    --navy-panel:#141f4a;
+    --navy-line:#2a3768;
+    --gold:#f2b705;
+    --gold-soft:#fddc7a;
+    --tin-red:#d4302b;
+    --tin-red-dark:#a6241f;
+    --cream:#f4efe2;
+    --cream-dim:#c9c4b4;
+    --teal:#178a72;
+    --ok:#4ade80;
+    --err:#e0554f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--navy-deep);color:var(--cream);font-family:'Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  .display{font-family:'Jua',sans-serif;}
+  #shop-content{display:none;}
+
+  /* ---------- GATE ---------- */
+  .gate-screen{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(242,183,5,.18), transparent 55%),
+      radial-gradient(ellipse at 85% 0%, rgba(212,48,43,.16), transparent 50%),
+      linear-gradient(180deg, #0a1230 0%, var(--navy-deep) 100%);
+  }
+  .gate-box{
+    width:100%;max-width:380px;background:var(--navy-panel);border:1px solid var(--navy-line);
+    border-radius:16px;padding:32px 26px;text-align:center;
+  }
+  .gate-icon{font-size:38px;margin-bottom:10px;}
+  .gate-box h1{font-family:'Jua',sans-serif;font-size:24px;margin:0 0 6px;color:var(--cream);}
+  .gate-box p{font-size:13px;color:var(--cream-dim);margin:0 0 22px;line-height:1.6;}
+  .gate-input{
+    width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--navy-line);
+    background:var(--navy-deep);color:var(--cream);font-size:16px;text-align:center;letter-spacing:.06em;
+    font-family:'Jua',sans-serif;
+  }
+  .gate-input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .gate-error{color:var(--err);font-size:12.5px;margin-top:10px;min-height:16px;}
+  .gate-btn{
+    margin-top:14px;width:100%;padding:13px;border:none;border-radius:10px;background:var(--gold);
+    color:var(--navy-deep);font-weight:900;font-size:15px;cursor:pointer;font-family:'Jua',sans-serif;
+  }
+  .gate-btn:disabled{background:#4a4f68;color:#8b8fa3;cursor:not-allowed;}
+  .gate-admin-link{
+    margin-top:20px;font-size:11.5px;color:var(--cream-dim);opacity:.55;background:none;border:none;
+    cursor:pointer;text-decoration:underline;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;padding:48px 24px 36px;text-align:center;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(242,183,5,.18), transparent 55%),
+      radial-gradient(ellipse at 85% 0%, rgba(212,48,43,.16), transparent 50%),
+      linear-gradient(180deg, #0a1230 0%, var(--navy-deep) 100%);
+    border-bottom:3px solid var(--navy-line);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background-image: radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.5) 0, transparent 60%),
+                       radial-gradient(1px 1px at 80% 30%, rgba(255,255,255,.4) 0, transparent 60%),
+                       radial-gradient(1.5px 1.5px at 60% 70%, rgba(255,255,255,.35) 0, transparent 60%),
+                       radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.4) 0, transparent 60%);
+    pointer-events:none;
+  }
+  .hero-badge{
+    display:inline-block;font-size:12px;letter-spacing:.02em;color:var(--navy-deep);
+    background:var(--gold-soft);padding:4px 14px;border-radius:999px;font-weight:700;margin-bottom:14px;
+  }
+  .hero h1{
+    font-family:'Jua',sans-serif;font-size:clamp(32px,6vw,52px);margin:0 0 8px;
+    color:var(--cream);text-shadow:0 3px 0 var(--tin-red-dark), 0 6px 14px rgba(0,0,0,.4);
+    letter-spacing:.02em;
+  }
+  .hero p{margin:0;color:var(--cream-dim);font-size:15px;}
+  .hero-notes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+  .hero-note{
+    font-size:12.5px;background:rgba(255,255,255,.06);border:1px solid var(--navy-line);
+    padding:6px 12px;border-radius:8px;color:var(--cream-dim);
+  }
+  .access-tag{
+    position:absolute;top:14px;right:16px;font-size:11px;background:rgba(255,255,255,.08);
+    border:1px solid var(--navy-line);padding:5px 11px;border-radius:999px;color:var(--gold-soft);
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:1fr 320px;gap:28px;}
+  @media (max-width:880px){.wrap{grid-template-columns:1fr;padding-bottom:200px;}}
+
+  .cat-section{margin-bottom:34px;}
+  .cat-header{
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;
+    border-bottom:2px solid var(--navy-line);
+  }
+  .cat-icon{
+    width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-size:18px;flex-shrink:0;
+  }
+  .cat-title{font-family:'Jua',sans-serif;font-size:19px;color:var(--cream);}
+  .cat-sub{font-size:12px;color:var(--cream-dim);margin-left:auto;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+
+  .card{
+    background:var(--navy-panel);border:1px solid var(--navy-line);border-radius:12px;
+    padding:14px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s, transform .15s;
+  }
+  .card:hover{border-color:var(--gold);}
+  .card-name{font-size:14.5px;font-weight:700;color:var(--cream);line-height:1.35;}
+  .card-desc{font-size:12px;color:var(--cream-dim);flex-grow:1;}
+  .card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+  .card-price{font-family:'Jua',sans-serif;font-size:17px;color:var(--gold-soft);}
+  .add-btn{
+    border:none;background:var(--tin-red);color:#fff;font-weight:700;font-size:12.5px;
+    padding:7px 12px;border-radius:8px;cursor:pointer;transition:background .15s, transform .1s;
+    white-space:nowrap;
+  }
+  .add-btn:hover{background:var(--tin-red-dark);}
+  .add-btn:active{transform:scale(.95);}
+  .add-btn.added{background:var(--ok);color:#0c1638;}
+
+  .card.pkg{background:linear-gradient(160deg, var(--navy-panel), #1b2758);border-color:#3a4a8f;}
+  .pkg-tier{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--gold-soft);font-weight:700;}
+  .pkg-save{font-size:11px;color:var(--ok);font-weight:700;}
+  .pkg-orig{font-size:11px;color:var(--cream-dim);text-decoration:line-through;}
+
+  /* ---------- CART ---------- */
+  .cart{
+    position:sticky;top:20px;align-self:start;
+    background:var(--navy-panel);border:1px solid var(--navy-line);border-radius:14px;
+    padding:18px;max-height:calc(100vh - 40px);display:flex;flex-direction:column;
+  }
+  .cart h2{font-family:'Jua',sans-serif;font-size:18px;margin:0 0 4px;color:var(--cream);}
+  .cart-sub{font-size:12px;color:var(--cream-dim);margin-bottom:14px;}
+  .cart-items{overflow-y:auto;flex-grow:1;display:flex;flex-direction:column;gap:10px;margin-bottom:14px;min-height:40px;}
+  .cart-empty{font-size:13px;color:var(--cream-dim);text-align:center;padding:24px 0;}
+  .cart-item{display:flex;align-items:center;gap:8px;font-size:12.5px;}
+  .cart-item-name{flex-grow:1;line-height:1.3;}
+  .qty-ctrl{display:flex;align-items:center;gap:6px;background:var(--navy-deep);border-radius:8px;padding:2px 6px;}
+  .qty-ctrl button{background:none;border:none;color:var(--cream);font-size:14px;cursor:pointer;padding:2px 4px;}
+  .qty-ctrl span{min-width:14px;text-align:center;font-size:12px;}
+  .cart-item-price{width:64px;text-align:right;color:var(--gold-soft);font-weight:700;font-size:12.5px;}
+  .cart-remove{background:none;border:none;color:#e0554f;cursor:pointer;font-size:14px;padding:0 2px;}
+
+  .cart-total-row{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;border-top:1px solid var(--navy-line);}
+  .cart-total-label{font-size:13px;color:var(--cream-dim);}
+  .cart-total-value{font-family:'Jua',sans-serif;font-size:22px;color:var(--gold);}
+  .min-order-warn{font-size:11.5px;color:#e0554f;margin-top:6px;}
+
+  .checkout-btn{
+    margin-top:14px;width:100%;border:none;border-radius:10px;padding:13px;
+    background:var(--gold);color:var(--navy-deep);font-weight:900;font-size:15px;cursor:pointer;
+    font-family:'Jua',sans-serif;letter-spacing:.02em;transition:transform .1s, box-shadow .15s;
+  }
+  .checkout-btn:hover:not(:disabled){box-shadow:0 4px 18px rgba(242,183,5,.35);}
+  .checkout-btn:active:not(:disabled){transform:scale(.98);}
+  .checkout-btn:disabled{background:#4a4f68;color:#8b8fa3;cursor:not-allowed;}
+
+  /* ---------- MODAL (checkout + admin share style) ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(6,10,26,.72);display:none;align-items:center;justify-content:center;
+    padding:20px;z-index:50;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--navy-panel);border:1px solid var(--navy-line);border-radius:16px;
+    width:100%;max-width:420px;padding:24px;max-height:90vh;overflow-y:auto;
+  }
+  .modal.wide{max-width:640px;}
+  .modal h3{font-family:'Jua',sans-serif;font-size:19px;margin:0 0 4px;color:var(--cream);}
+  .modal .modal-sub{font-size:12.5px;color:var(--cream-dim);margin-bottom:18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12.5px;color:var(--cream-dim);margin-bottom:6px;}
+  .field input, .field select{
+    width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--navy-line);
+    background:var(--navy-deep);color:var(--cream);font-size:13.5px;font-family:inherit;
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-summary{background:var(--navy-deep);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:12.5px;}
+  .modal-summary-row{display:flex;justify-content:space-between;padding:3px 0;color:var(--cream-dim);}
+  .modal-summary-row.total{color:var(--gold-soft);font-weight:700;font-size:14px;border-top:1px solid var(--navy-line);margin-top:6px;padding-top:8px;}
+  .pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+  .pay-methods label{
+    display:flex;align-items:center;gap:8px;border:1px solid var(--navy-line);border-radius:9px;
+    padding:10px;font-size:12.5px;cursor:pointer;
+  }
+  .pay-methods input[type=radio]{accent-color:var(--gold);}
+  .pay-methods label.checked{border-color:var(--gold);background:rgba(242,183,5,.08);}
+  .modal-btn-row{display:flex;gap:8px;}
+  .modal-cancel{
+    flex:1;padding:12px;border-radius:10px;border:1px solid var(--navy-line);background:transparent;
+    color:var(--cream-dim);font-weight:700;cursor:pointer;font-size:13.5px;
+  }
+  .modal-confirm{
+    flex:2;padding:12px;border-radius:10px;border:none;background:var(--tin-red);color:#fff;
+    font-weight:900;cursor:pointer;font-size:14.5px;font-family:'Jua',sans-serif;
+  }
+  .modal-confirm:disabled{background:#4a4f68;color:#8b8fa3;cursor:not-allowed;}
+
+  .paying{text-align:center;padding:30px 10px;}
+  .spinner{
+    width:44px;height:44px;border-radius:50%;border:4px solid var(--navy-line);border-top-color:var(--gold);
+    margin:0 auto 16px;animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .paying p{color:var(--cream-dim);font-size:13px;}
+
+  .done{text-align:center;padding:12px 4px 4px;}
+  .done-badge{
+    width:56px;height:56px;border-radius:50%;background:var(--ok);color:var(--navy-deep);
+    display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;
+  }
+  .done h3{margin-bottom:4px;}
+  .order-id{
+    font-family:'Jua',sans-serif;font-size:20px;color:var(--gold-soft);background:var(--navy-deep);
+    border-radius:9px;padding:10px;margin:14px 0;letter-spacing:.05em;
+  }
+  .done p.note{font-size:12px;color:var(--cream-dim);line-height:1.6;}
+  .close-done{
+    margin-top:16px;width:100%;padding:12px;border-radius:10px;border:none;background:var(--gold);
+    color:var(--navy-deep);font-weight:900;cursor:pointer;font-family:'Jua',sans-serif;font-size:14px;
+  }
+
+  .disclaimer{
+    max-width:1180px;margin:0 auto;padding:0 20px 40px;font-size:11.5px;color:var(--cream-dim);
+    line-height:1.7;border-top:1px solid var(--navy-line);padding-top:18px;
+  }
+
+  /* ---------- ADMIN ---------- */
+  .code-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;}
+  .code-table th{text-align:left;color:var(--cream-dim);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--navy-line);font-size:11.5px;}
+  .code-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top;}
+  .code-status{font-size:11px;padding:3px 8px;border-radius:999px;font-weight:700;display:inline-block;}
+  .status-active{background:rgba(74,222,128,.15);color:var(--ok);}
+  .status-pending{background:rgba(242,183,5,.15);color:var(--gold-soft);}
+  .status-expired{background:rgba(224,85,79,.15);color:var(--err);}
+  .del-code{background:none;border:none;color:var(--err);cursor:pointer;font-size:12px;text-decoration:underline;}
+  .gen-btn{background:var(--navy-deep);border:1px solid var(--navy-line);color:var(--cream);border-radius:8px;padding:9px 10px;cursor:pointer;font-size:12px;white-space:nowrap;}
+  .code-input-row{display:flex;gap:8px;}
+  .admin-empty{font-size:12.5px;color:var(--cream-dim);padding:14px 0;text-align:center;}
+</style>
+</head>
+<body>
+
+<!-- ================= GATE ================= -->
+<div class="gate-screen" id="gate-screen">
+  <div class="gate-box">
+    <div class="gate-icon">🔒</div>
+    <h1 class="display">입장 코드 확인</h1>
+    <p>냥코 상점은 발급받은 기간제 코드로만 입장할 수 있어요.<br>보유하신 코드를 입력해 주세요.</p>
+    <input type="text" id="gate-code-input" class="gate-input" placeholder="코드 입력" autocomplete="off">
+    <div class="gate-error" id="gate-error"></div>
+    <button class="gate-btn" id="gate-submit">입장하기</button>
+    <button class="gate-admin-link" id="open-admin-login">관리자 로그인</button>
+  </div>
+</div>
+
+<!-- ================= SHOP ================= -->
+<div id="shop-content">
+  <div class="hero">
+    <span class="access-tag" id="access-tag"></span>
+    <span class="hero-badge">냥코 대전쟁 재화 &amp; 서비스</span>
+    <h1 class="display">냥코 상점</h1>
+    <p>필요한 것만 담아서 바로 주문하세요</p>
+    <div class="hero-notes">
+      <span class="hero-note">🐾 최소 주문 금액 200원</span>
+      <span class="hero-note">🎁 2개 이상 구매 시 추가 할인</span>
+      <span class="hero-note">🛡️ 빠른 작업 · 안전 거래 보장</span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div id="catalog"></div>
+
+    <aside class="cart">
+      <h2 class="display">장바구니</h2>
+      <div class="cart-sub" id="cart-count">담긴 상품 0개</div>
+      <div class="cart-items" id="cart-items">
+        <div class="cart-empty">아직 담은 상품이 없어요.<br>왼쪽에서 원하는 항목을 선택해 주세요.</div>
+      </div>
+      <div class="cart-total-row">
+        <span class="cart-total-label">총 결제금액</span>
+        <span class="cart-total-value" id="cart-total">0원</span>
+      </div>
+      <div class="min-order-warn" id="min-warn" style="display:none;">최소 주문 금액(200원) 이상 담아주세요.</div>
+      <button class="checkout-btn" id="checkout-btn" disabled>결제하기</button>
+    </aside>
+  </div>
+
+  <div class="disclaimer">
+    ※ 이 페이지는 주문 접수 및 결제 시뮬레이션 데모입니다. 실제 카드/간편결제 승인은 별도의 결제대행사(PG) 연동이 필요하며, 이 화면의 "결제하기"는 주문 내역을 정리해 판매자에게 접수하는 용도로 동작합니다.<br>
+    입장 코드는 판매자가 지정한 기간 동안만 유효합니다.
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="overlay" id="admin-login-overlay">
+  <div class="modal" id="admin-login-content">
+    <h3 class="display">관리자 로그인</h3>
+    <div class="modal-sub">코드 발급 및 관리를 위한 비밀번호를 입력하세요.</div>
+    <div class="field">
+      <label>관리자 비밀번호</label>
+      <input type="password" id="admin-pass-input" placeholder="비밀번호">
+    </div>
+    <div class="gate-error" id="admin-login-error"></div>
+    <div class="modal-btn-row">
+      <button class="modal-cancel" id="admin-login-cancel">취소</button>
+      <button class="modal-confirm" id="admin-login-submit">로그인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="overlay" id="admin-panel-overlay">
+  <div class="modal wide" id="admin-panel-content"></div>
+</div>
+
+<script>
+/* =========================================================
+   설정: 관리자 비밀번호는 아래 값을 원하는 값으로 바꿔서 사용하세요.
+   ========================================================= */
+const ADMIN_PASSWORD = "admin1234";
+
+/* ---------------- 상품 데이터 ---------------- */
+const PRODUCTS = [
+  { cat:"재화 및 성장 아이템", icon:"🥫", color:"#3654c9", items:[
+    {name:"통조림(Cat Food) 45,000개", price:100},
+    {name:"XP 1억", price:100},
+    {name:"NP 10,000개", price:100},
+    {name:"리더십 9,999개", price:200},
+    {name:"캣츠아이(전종) 9,999개", price:700},
+    {name:"모든 드링크 9,999개", price:700},
+    {name:"모든 배틀 아이템 9,999개", price:700},
+    {name:"개다래 열매 + 수석 998개", price:500},
+    {name:"모든 본능 구슬 998개", price:500},
+  ]},
+  { cat:"가차 및 티켓", icon:"🎟️", color:"#1f8a4c", items:[
+    {name:"냥코 티켓 2,999장", price:50},
+    {name:"레어 티켓 299장", price:100},
+    {name:"플래티넘 티켓 9장", price:200},
+    {name:"레전드 티켓 4장", price:300},
+  ]},
+  { cat:"스테이지 정복", icon:"🌏", color:"#c0322c", items:[
+    {name:"세계편(1~3장) 보물 포함", price:500},
+    {name:"미래편(1~3장) 보물 포함", price:500},
+    {name:"우주편(1~3장) 보물 포함", price:500},
+    {name:"전 스토리 패키지 (보물 포함)", price:1200, desc:"세계·미래·우주편 전체 스토리 + 보물"},
+  ]},
+  { cat:"캐릭터 & 관리 서비스", icon:"🐱", color:"#4c4faf", items:[
+    {name:"원하는 캐릭터 추가", price:200},
+    {name:"캐릭터 레벨업", price:200},
+    {name:"캐릭터 진화", price:200},
+    {name:"캐릭터 본능", price:200},
+    {name:"캐릭터 삭제", price:200},
+  ]},
+  { cat:"풀 컬렉션 패키지 (3가지 서비스)", icon:"👑", color:"#b13a63", items:[
+    {name:"모든 캐릭터 획득", price:1000},
+    {name:"모든 캐릭터 레벨업", price:1000},
+    {name:"모든 캐릭터 본능", price:500, desc:"개별 구매 합계 2,500원 → 세 항목 함께 담으면 아래 패키지가로 자동 정리됩니다"},
+  ]},
+  { cat:"가마토토 서비스", icon:"⚓", color:"#178a72", items:[
+    {name:"가마토토 만렙", price:500},
+    {name:"조수 5마리 + 레전드 조수 10마리", price:500},
+    {name:"성 재료 1000개 세트", price:500},
+  ]},
+];
+
+const PACKAGES = [
+  {name:"브론즈 패키지", tier:"BRONZE", price:500, orig:900, save:400,
+   desc:"통조림 45,000개 · XP 1억 · NP 10,000개 · 리더십 9,999개"},
+  {name:"실버 패키지", tier:"SILVER", price:1300, orig:2600, save:1300,
+   desc:"브론즈 포함 + 캣츠아이 전종 · 모든 드링크 · 레어 티켓 299장 · 개다래열매/수석 · 본능구슬"},
+  {name:"골드 패키지", tier:"GOLD", price:2500, orig:4600, save:2100,
+   desc:"실버 포함 + 원하는 캐릭터 추가 · 레벨업 · 진화 · 본능"},
+  {name:"플래티넘 패키지", tier:"PLATINUM", price:4000, orig:6600, save:2600,
+   desc:"골드 포함 + 모든 캐릭터 획득 · 레벨업 · 본능 · 가마토토 만렙"},
+  {name:"레전드 패키지", tier:"LEGEND", price:6000, orig:9400, save:3400,
+   desc:"플래티넘 포함 + 전 스토리 패키지 · 조수 5+레전드10 · 성재료1000 · 플래티넘티켓9장 · 레전드티켓4장"},
+];
+
+let cart = [];
+
+function money(n){ return n.toLocaleString('ko-KR') + '원'; }
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleString('ko-KR', {year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+
+/* =========================================================
+   입장 코드 게이트
+   코드 레코드 형태: { code, startAt(ISO), endAt(ISO), maxUses(0=무제한), usedCount, note, createdAt }
+   저장 위치: window.storage (shared:true) key = 'code:' + code
+   ========================================================= */
+
+async function getCodeRecord(code){
+  try{
+    const res = await window.storage.get('code:' + code, true);
+    return res ? JSON.parse(res.value) : null;
+  }catch(e){
+    return null;
+  }
+}
+
+async function saveCodeRecord(record){
+  await window.storage.set('code:' + record.code, JSON.stringify(record), true);
+}
+
+async function listCodeRecords(){
+  try{
+    const listRes = await window.storage.list('code:', true);
+    if (!listRes || !listRes.keys) return [];
+    const records = [];
+    for (const key of listRes.keys){
+      try{
+        const res = await window.storage.get(key, true);
+        if (res) records.push(JSON.parse(res.value));
+      }catch(e){}
+    }
+    records.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+    return records;
+  }catch(e){
+    return [];
+  }
+}
+
+function codeStatus(record){
+  const now = new Date();
+  const start = new Date(record.startAt);
+  const end = new Date(record.endAt);
+  if (now < start) return 'pending';
+  if (now > end) return 'expired';
+  if (record.maxUses > 0 && record.usedCount >= record.maxUses) return 'expired';
+  return 'active';
+}
+
+let currentAccessCode = null;
+
+document.getElementById('gate-submit').addEventListener('click', submitGateCode);
+document.getElementById('gate-code-input').addEventListener('keydown', (e)=>{
+  if (e.key === 'Enter') submitGateCode();
+});
+
+async function submitGateCode(){
+  const input = document.getElementById('gate-code-input');
+  const errEl = document.getElementById('gate-error');
+  const btn = document.getElementById('gate-submit');
+  const code = input.value.trim().toUpperCase();
+
+  errEl.textContent = '';
+  if (!code){
+    errEl.textContent = '코드를 입력해 주세요.';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '확인 중...';
+
+  const record = await getCodeRecord(code);
+  btn.disabled = false;
+  btn.textContent = '입장하기';
+
+  if (!record){
+    errEl.textContent = '유효하지 않은 코드입니다.';
+    return;
+  }
+  const status = codeStatus(record);
+  if (status === 'pending'){
+    errEl.textContent = `아직 사용할 수 없는 코드입니다. (시작: ${fmtDate(record.startAt)})`;
+    return;
+  }
+  if (status === 'expired'){
+    if (record.maxUses > 0 && record.usedCount >= record.maxUses){
+      errEl.textContent = '사용 횟수를 초과한 코드입니다.';
+    } else {
+      errEl.textContent = `사용 기간이 지난 코드입니다. (종료: ${fmtDate(record.endAt)})`;
+    }
+    return;
+  }
+
+  // 유효 -> 입장 처리
+  record.usedCount = (record.usedCount || 0) + 1;
+  await saveCodeRecord(record);
+  currentAccessCode = record;
+  enterShop(record);
+}
+
+function enterShop(record){
+  document.getElementById('gate-screen').style.display = 'none';
+  document.getElementById('shop-content').style.display = 'block';
+  document.getElementById('access-tag').textContent =
+    `입장 코드: ${record.code} · ${fmtDate(record.endAt)}까지 유효`;
+  renderCatalog();
+  renderCart();
+}
+
+/* =========================================================
+   관리자 로그인 / 코드 발급 패널
+   ========================================================= */
+document.getElementById('open-admin-login').addEventListener('click', ()=>{
+  document.getElementById('admin-pass-input').value = '';
+  document.getElementById('admin-login-error').textContent = '';
+  document.getElementById('admin-login-overlay').classList.add('open');
+});
+document.getElementById('admin-login-cancel').addEventListener('click', ()=>{
+  document.getElementById('admin-login-overlay').classList.remove('open');
+});
+document.getElementById('admin-login-submit').addEventListener('click', ()=>{
+  const pass = document.getElementById('admin-pass-input').value;
+  if (pass === ADMIN_PASSWORD){
+    document.getElementById('admin-login-overlay').classList.remove('open');
+    openAdminPanel();
+  } else {
+    document.getElementById('admin-login-error').textContent = '비밀번호가 올바르지 않습니다.';
+  }
+});
+
+function randomCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i=0;i<8;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s.slice(0,4) + '-' + s.slice(4);
+}
+
+function toLocalInputValue(date){
+  const pad = n => String(n).padStart(2,'0');
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+async function openAdminPanel(){
+  const modal = document.getElementById('admin-panel-content');
+  const now = new Date();
+  const inWeek = new Date(now.getTime() + 7*24*60*60*1000);
+
+  modal.innerHTML = `
+    <h3 class="display">입장 코드 관리</h3>
+    <div class="modal-sub">기간과 사용 횟수를 정해 코드를 발급하고, 발급된 코드 목록을 확인/삭제할 수 있어요.</div>
+
+    <div class="field code-input-row">
+      <div style="flex:1;">
+        <label>코드</label>
+        <input type="text" id="new-code" value="${randomCode()}">
+      </div>
+      <button class="gen-btn" id="regen-code" style="align-self:flex-end;height:41px;">새 코드</button>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>시작 일시</label>
+        <input type="datetime-local" id="new-start" value="${toLocalInputValue(now)}">
+      </div>
+      <div class="field">
+        <label>종료 일시</label>
+        <input type="datetime-local" id="new-end" value="${toLocalInputValue(inWeek)}">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>최대 사용 횟수 (0 = 무제한)</label>
+        <input type="number" id="new-maxuses" min="0" value="1">
+      </div>
+      <div class="field">
+        <label>메모 (구매자명 등, 선택)</label>
+        <input type="text" id="new-note" placeholder="예: 홍길동 / 텔레그램 문의">
+      </div>
+    </div>
+    <div class="gate-error" id="admin-create-error"></div>
+    <button class="modal-confirm" id="create-code-btn" style="width:100%;margin-bottom:22px;">코드 발급하기</button>
+
+    <h3 class="display" style="font-size:16px;">발급된 코드 목록</h3>
+    <div id="code-list-wrap">
+      <div class="admin-empty">불러오는 중...</div>
+    </div>
+
+    <div class="modal-btn-row" style="margin-top:18px;">
+      <button class="modal-cancel" id="admin-close">닫기</button>
+    </div>
+  `;
+
+  document.getElementById('regen-code').addEventListener('click', ()=>{
+    document.getElementById('new-code').value = randomCode();
+  });
+  document.getElementById('create-code-btn').addEventListener('click', createNewCode);
+  document.getElementById('admin-close').addEventListener('click', ()=>{
+    document.getElementById('admin-panel-overlay').classList.remove('open');
+  });
+
+  document.getElementById('admin-panel-overlay').classList.add('open');
+  await refreshCodeList();
+}
+
+async function createNewCode(){
+  const errEl = document.getElementById('admin-create-error');
+  errEl.textContent = '';
+
+  const code = document.getElementById('new-code').value.trim().toUpperCase();
+  const startAt = document.getElementById('new-start').value;
+  const endAt = document.getElementById('new-end').value;
+  const maxUses = Number(document.getElementById('new-maxuses').value) || 0;
+  const note = document.getElementById('new-note').value.trim();
+
+  if (!code || !startAt || !endAt){
+    errEl.textContent = '코드, 시작 일시, 종료 일시를 모두 입력해 주세요.';
+    return;
+  }
+  if (new Date(endAt) <= new Date(startAt)){
+    errEl.textContent = '종료 일시는 시작 일시보다 늦어야 합니다.';
+    return;
+  }
+  const existing = await getCodeRecord(code);
+  if (existing){
+    errEl.textContent = '이미 존재하는 코드입니다. 다른 코드를 사용해 주세요.';
+    return;
+  }
+
+  const record = {
+    code,
+    startAt: new Date(startAt).toISOString(),
+    endAt: new Date(endAt).toISOString(),
+    maxUses,
+    usedCount: 0,
+    note,
+    createdAt: new Date().toISOString(),
+  };
+  await saveCodeRecord(record);
+  document.getElementById('new-code').value = randomCode();
+  document.getElementById('new-note').value = '';
+  await refreshCodeList();
+}
+
+async function refreshCodeList(){
+  const wrap = document.getElementById('code-list-wrap');
+  const records = await listCodeRecords();
+
+  if (records.length === 0){
+    wrap.innerHTML = '<div class="admin-empty">아직 발급된 코드가 없어요.</div>';
+    return;
+  }
+
+  const statusLabel = { active:'사용 가능', pending:'대기중', expired:'만료' };
+  const statusClass = { active:'status-active', pending:'status-pending', expired:'status-expired' };
+
+  wrap.innerHTML = `
+    <table class="code-table">
+      <thead>
+        <tr>
+          <th>코드</th><th>기간</th><th>사용</th><th>메모</th><th>상태</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${records.map(r => {
+          const st = codeStatus(r);
+          return `
+            <tr>
+              <td><strong>${r.code}</strong></td>
+              <td>${fmtDate(r.startAt)}<br>~ ${fmtDate(r.endAt)}</td>
+              <td>${r.usedCount || 0}${r.maxUses > 0 ? ' / ' + r.maxUses : ' / ∞'}</td>
+              <td>${r.note || '-'}</td>
+              <td><span class="code-status ${statusClass[st]}">${statusLabel[st]}</span></td>
+              <td><button class="del-code" data-code="${r.code}">삭제</button></td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+
+  wrap.querySelectorAll('.del-code').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      if (!confirm(`코드 "${btn.dataset.code}"를 삭제할까요?`)) return;
+      try{
+        const res = await window.storage.get('code:' + btn.dataset.code, true);
+        if (res){
+          await window.storage.delete('code:' + btn.dataset.code, true);
+        }
+      }catch(e){}
+      await refreshCodeList();
+    });
+  });
+}
+
+/* =========================================================
+   상점 카탈로그 / 장바구니 (입장 이후 동작)
+   ========================================================= */
+function renderCatalog(){
+  const root = document.getElementById('catalog');
+  root.innerHTML = '';
+
+  PRODUCTS.forEach(section => {
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+    sec.innerHTML = `
+      <div class="cat-header">
+        <div class="cat-icon" style="background:${section.color}33;">${section.icon}</div>
+        <div class="cat-title display">${section.cat}</div>
+        <div class="cat-sub">${section.items.length}개 항목</div>
+      </div>
+      <div class="grid">
+        ${section.items.map((it, idx) => cardHTML(section.cat, idx, it)).join('')}
+      </div>
+    `;
+    root.appendChild(sec);
+  });
+
+  const pkgSec = document.createElement('div');
+  pkgSec.className = 'cat-section';
+  pkgSec.innerHTML = `
+    <div class="cat-header">
+      <div class="cat-icon" style="background:#f2b70533;">⭐</div>
+      <div class="cat-title display">추천 패키지</div>
+      <div class="cat-sub">묶음 구매 시 더 저렴해요</div>
+    </div>
+    <div class="grid">
+      ${PACKAGES.map((p, idx) => pkgCardHTML(idx, p)).join('')}
+    </div>
+  `;
+  root.appendChild(pkgSec);
+
+  root.querySelectorAll('[data-add]').forEach(btn=>{
+    btn.addEventListener('click', () => onAdd(btn));
+  });
+}
+
+function cardHTML(cat, idx, it){
+  const id = `${cat}__${idx}`;
+  return `
+    <div class="card">
+      <div class="card-name">${it.name}</div>
+      ${it.desc ? `<div class="card-desc">${it.desc}</div>` : `<div class="card-desc"></div>`}
+      <div class="card-bottom">
+        <span class="card-price display">${money(it.price)}</span>
+        <button class="add-btn" data-add="${id}" data-name="${it.name}" data-price="${it.price}">담기</button>
+      </div>
+    </div>
+  `;
+}
+
+function pkgCardHTML(idx, p){
+  const id = `pkg__${idx}`;
+  return `
+    <div class="card pkg">
+      <span class="pkg-tier">🏅 ${p.tier}</span>
+      <div class="card-name">${p.name}</div>
+      <div class="card-desc">${p.desc}</div>
+      <div style="display:flex;gap:8px;align-items:baseline;">
+        <span class="pkg-orig">${money(p.orig)}</span>
+        <span class="pkg-save">이득 ${money(p.save)}</span>
+      </div>
+      <div class="card-bottom">
+        <span class="card-price display">${money(p.price)}</span>
+        <button class="add-btn" data-add="${id}" data-name="${p.name}" data-price="${p.price}">담기</button>
+      </div>
+    </div>
+  `;
+}
+
+function onAdd(btn){
+  const name = btn.dataset.name;
+  const price = Number(btn.dataset.price);
+  const existing = cart.find(c => c.name === name);
+  if (existing) existing.qty += 1;
+  else cart.push({name, price, qty:1});
+
+  btn.textContent = '담김 ✓';
+  btn.classList.add('added');
+  setTimeout(()=>{ btn.textContent='담기'; btn.classList.remove('added'); }, 900);
+
+  renderCart();
+}
+
+function changeQty(idx, delta){
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx,1);
+  renderCart();
+}
+
+function removeItem(idx){
+  cart.splice(idx,1);
+  renderCart();
+}
+
+function cartTotal(){
+  return cart.reduce((sum,c)=> sum + c.price*c.qty, 0);
+}
+
+function renderCart(){
+  const itemsEl = document.getElementById('cart-items');
+  const countEl = document.getElementById('cart-count');
+  const totalEl = document.getElementById('cart-total');
+  const btn = document.getElementById('checkout-btn');
+  const warn = document.getElementById('min-warn');
+
+  const totalQty = cart.reduce((s,c)=>s+c.qty,0);
+  countEl.textContent = `담긴 상품 ${totalQty}개`;
+
+  if (cart.length === 0){
+    itemsEl.innerHTML = `<div class="cart-empty">아직 담은 상품이 없어요.<br>왼쪽에서 원하는 항목을 선택해 주세요.</div>`;
+  } else {
+    itemsEl.innerHTML = cart.map((c, idx) => `
+      <div class="cart-item">
+        <span class="cart-item-name">${c.name}</span>
+        <div class="qty-ctrl">
+          <button onclick="changeQty(${idx},-1)">−</button>
+          <span>${c.qty}</span>
+          <button onclick="changeQty(${idx},1)">+</button>
+        </div>
+        <span class="cart-item-price">${money(c.price*c.qty)}</span>
+        <button class="cart-remove" onclick="removeItem(${idx})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  const total = cartTotal();
+  totalEl.textContent = money(total);
+
+  const meetsMin = total >= 200;
+  warn.style.display = (cart.length > 0 && !meetsMin) ? 'block' : 'none';
+  btn.disabled = cart.length === 0 || !meetsMin;
+}
+
+document.getElementById('checkout-btn').addEventListener('click', openCheckout);
+
+function openCheckout(){
+  const overlay = document.getElementById('overlay');
+  const modal = document.getElementById('modal-content');
+  const total = cartTotal();
+
+  modal.innerHTML = `
+    <h3 class="display">주문 정보 입력</h3>
+    <div class="modal-sub">주문 확인 및 재화 지급을 위해 정보를 입력해 주세요.</div>
+
+    <div class="field">
+      <label>게임 내 닉네임 / ID</label>
+      <input type="text" id="f-nickname" placeholder="예: 냥코매니아">
+    </div>
+    <div class="field">
+      <label>연락처 (카카오톡 ID 또는 전화번호)</label>
+      <input type="text" id="f-contact" placeholder="예: kakao_id 또는 010-0000-0000">
+    </div>
+
+    <div class="modal-summary" id="order-summary">
+      ${cart.map(c=>`<div class="modal-summary-row"><span>${c.name} × ${c.qty}</span><span>${money(c.price*c.qty)}</span></div>`).join('')}
+      <div class="modal-summary-row total"><span>총 결제금액</span><span>${money(total)}</span></div>
+    </div>
+
+    <div class="field">
+      <label>결제 수단</label>
+      <div class="pay-methods">
+        <label class="checked"><input type="radio" name="pay" value="card" checked> 카드결제</label>
+        <label><input type="radio" name="pay" value="kakaopay"> 카카오페이</label>
+        <label><input type="radio" name="pay" value="toss"> 토스페이</label>
+        <label><input type="radio" name="pay" value="bank"> 계좌이체</label>
+      </div>
+    </div>
+
+    <div class="modal-btn-row">
+      <button class="modal-cancel" id="btn-cancel">취소</button>
+      <button class="modal-confirm" id="btn-pay">${money(total)} 결제하기</button>
+    </div>
+  `;
+
+  modal.querySelectorAll('input[name=pay]').forEach(r=>{
+    r.addEventListener('change', ()=>{
+      modal.querySelectorAll('.pay-methods label').forEach(l=>l.classList.remove('checked'));
+      r.closest('label').classList.add('checked');
+    });
+  });
+
+  document.getElementById('btn-cancel').addEventListener('click', closeOverlay);
+  document.getElementById('btn-pay').addEventListener('click', startPayment);
+
+  overlay.classList.add('open');
+}
+
+function closeOverlay(){
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function startPayment(){
+  const nickname = document.getElementById('f-nickname').value.trim();
+  const contact = document.getElementById('f-contact').value.trim();
+  if (!nickname || !contact){
+    alert('닉네임과 연락처를 입력해 주세요.');
+    return;
+  }
+  const payMethod = document.querySelector('input[name=pay]:checked').value;
+  const modal = document.getElementById('modal-content');
+  const total = cartTotal();
+
+  modal.innerHTML = `
+    <div class="paying">
+      <div class="spinner"></div>
+      <p>결제 진행 중입니다...</p>
+    </div>
+  `;
+
+  setTimeout(() => finishPayment(nickname, contact, payMethod, total), 1400);
+}
+
+async function finishPayment(nickname, contact, payMethod, total){
+  const orderId = 'NK-' + Date.now().toString().slice(-8);
+  const order = {
+    orderId, nickname, contact, payMethod, total,
+    accessCode: currentAccessCode ? currentAccessCode.code : null,
+    items: cart.map(c=>({name:c.name, qty:c.qty, price:c.price})),
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    await window.storage.set('order:' + orderId, JSON.stringify(order), true);
+  } catch(e) {
+    console.error('주문 저장 실패', e);
+  }
+
+  const modal = document.getElementById('modal-content');
+  modal.innerHTML = `
+    <div class="done">
+      <div class="done-badge">✓</div>
+      <h3 class="display">결제가 완료되었습니다</h3>
+      <div class="order-id">${orderId}</div>
+      <p class="note">주문이 정상적으로 접수되었습니다. 입력하신 연락처로 재화 지급 및 진행 상황을 안내드립니다.<br>보통 5~30분 이내 처리됩니다.</p>
+      <button class="close-done" onclick="afterDone()">확인</button>
+    </div>
+  `;
+}
+
+function afterDone(){
+  cart = [];
+  renderCart();
+  closeOverlay();
+}
+</script>
+</body>
+</html>
